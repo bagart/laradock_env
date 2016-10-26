@@ -290,7 +290,7 @@ services:
     volumes_source:
         image: tianon/true
         volumes:
-            - ../hinta:/var/www/laravel
+            - ../laravel:/var/www/laravel
             # Demonstration of how to mount multiple sites
             # - ../../site_a/:/var/www/site_a
             # - ../../site_b/:/var/www/site_b
