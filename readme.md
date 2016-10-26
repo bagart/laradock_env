@@ -1,8 +1,10 @@
 # Simple LaraDock tools and dev environments
+use: https://github.com/LaraDock/laradock
 
 #Install
 copy to parrent path of your projects
-edit _env/laradock/* files as you needed. 
+edit [_env/laradock/*](_env/laradock/) docker-compose config  as you needed.
+edit [cmd/up.sh](cmd/up.sh) edit list of docker images for run
 add other docker-config, remove for default
 
 run [cmd/install/docker-install.sh](cmd/install/docker-install.sh)
