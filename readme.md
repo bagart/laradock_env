@@ -7,7 +7,7 @@ add other docker-config, remove for default
 
 run [cmd/install/docker-install.sh](cmd/install/docker-install.sh)
 
-#use
+#Use
 
 [cmd/install/docker-install.sh](cmd/install/docker-install.sh)  - 1st run. rebuild with new config
 
@@ -28,7 +28,10 @@ run [cmd/install/docker-install.sh](cmd/install/docker-install.sh)
 [cmd/rebuild.sh](cmd/rebuild.sh) - rebuild new docker images(without copy _env), run xdebug mode(dev-env)
 
 
-#what news
+#What news
+
 xdebug for cli (workspace docker) opt: PHP_IDE_CONFIG = serverName=laravel
+
 windows support
+
 cmd tools for quick work
