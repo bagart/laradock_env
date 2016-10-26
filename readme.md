@@ -22,7 +22,7 @@ run [cmd/install/docker-install.sh](cmd/install/docker-install.sh)
 
 [cmd/conn-cmd/conn-root-workspace.sh](cmd/conn-root-workspace.sh) - connect to cli workspace with root user
 
-[cmd/conn-*.sh](cmd/) - connect to container with windows support
+[cmd/conn-*.sh](cmd/) - connect to container
 
 
 [cmd/purge-beanstalkd.sh](cmd/purge-beanstalkd.sh) - clear beanstalkd queue
