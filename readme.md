@@ -1,4 +1,4 @@
-# simple LaraDock tools and dev environments
+# Simple LaraDock tools and dev environments
 
 #Install
 copy to parrent path of your projects
