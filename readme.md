@@ -1,5 +1,5 @@
 # Simple LaraDock tools and dev environments
-use: https://github.com/LaraDock/laradock
+this project is wrapper for https://github.com/LaraDock/laradock
 
 #Install
 copy to parrent path of your projects
