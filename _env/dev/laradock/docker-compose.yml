@@ -1,6 +1,17 @@
 version: '2'
+
 services:
+
+### Applications Code Container #############################
+
+    applications:
+        image: tianon/true
+        volumes:
+            - ../project:/var/www
+#            - ../sample/:/var/www/sample
+
 ### Workspace Utilities Container ###########################
+
     workspace:
         build:
             context: ./workspace
@@ -8,6 +19,7 @@ services:
                 - INSTALL_XDEBUG=true
                 - INSTALL_MONGO=false
                 - INSTALL_NODE=true
+                - INSTALL_GRUNT=true
                 - INSTALL_YARN=false
                 - INSTALL_DRUSH=false
                 - INSTALL_AEROSPIKE_EXTENSION=false
@@ -16,15 +28,19 @@ services:
                 - PUID=1000
                 - PGID=1000
                 - NODE_VERSION=stable
-                - TZ=UTC
+                - TZ=Europe/Moscow
         volumes_from:
-            - volumes_source
+            - applications
         extra_hosts:
             # IMPORTANT: Replace with your Docker Host IP (will be appended to /etc/hosts)
             - "dockerhost:10.0.75.1"
         ports:
            - "127.0.0.1:2222:22"
+
         tty: true
+        expose:
+            - "9000"
+            - "9200"
         environment:
             # IMPORTANT: Set the Remote Interpreter entry matching name to `laravel`
             - PHP_IDE_CONFIG = serverName=laravel
@@ -41,11 +57,13 @@ services:
                 - INSTALL_MEMCACHED=false
                 - INSTALL_OPCACHE=false
                 - INSTALL_AEROSPIKE_EXTENSION=false
+                - CODEIGNITER=false
             dockerfile: Dockerfile-70
         volumes_from:
-            - volumes_source
+            - applications
         expose:
             - "9000"
+            - "9200"
         links:
             - workspace
         extra_hosts:
@@ -63,16 +81,17 @@ services:
             args:
                 - PHP_UPSTREAM=php-fpm
         volumes_from:
-            - volumes_source
+            - applications
         volumes:
             - ./logs/nginx/:/var/log/nginx
+            - ./nginx/sites/:/etc/nginx/sites-available
         ports:
             - "80:80"
             - "443:443"
         links:
             - php-fpm
 
-### Apache Server Container ##################################
+### Apache Server Container #################################
 
     apache2:
         build:
@@ -80,7 +99,7 @@ services:
             args:
                 - PHP_SOCKET=php-fpm:9000
         volumes_from:
-            - volumes_source
+            - applications
         volumes:
             - ./logs/apache2:/var/log/apache2
         ports:
@@ -94,7 +113,7 @@ services:
     hhvm:
         build: ./hhvm
         volumes_from:
-            - volumes_source
+            - applications
         expose:
             - "9000"
         links:
@@ -103,23 +122,24 @@ services:
 ### MySQL Container #########################################
 
     mysql:
-        build: ./mysql
-        volumes_from:
-            - volumes_data
+        build:
+            context: ./mysql
+            args:
+                - MYSQL_DATABASE=homestead
+                - MYSQL_USER=homestead
+                - MYSQL_PASSWORD=secret
+                - MYSQL_ROOT_PASSWORD=root
+        volumes:
+            - mysql:/var/lib/mysql
         ports:
             - "127.0.0.1:3306:3306"
-        environment:
-            MYSQL_DATABASE: homestead
-            MYSQL_USER: homestead
-            MYSQL_PASSWORD: secret
-            MYSQL_ROOT_PASSWORD: root
 
 ### MariaDB Container #######################################
 
     mariadb:
         build: ./mariadb
-        volumes_from:
-            - volumes_data
+        volumes:
+            - mysql:/var/lib/mysql
         ports:
             - "127.0.0.1:3306:3306"
         environment:
@@ -132,8 +152,21 @@ services:
 
     postgres:
         build: ./postgres
-        volumes_from:
-            - volumes_data
+        volumes:
+            - postgres:/var/lib/postgresql/data
+        ports:
+            - "127.0.0.1:5432:5432"
+        environment:
+            POSTGRES_DB: homestead
+            POSTGRES_USER: homestead
+            POSTGRES_PASSWORD: secret
+
+### PostgreSQL PostGis Container ############################
+
+    postgres-postgis:
+        build: ./postgres-postgis
+        volumes:
+            - postgres:/var/lib/postgresql/data
         ports:
             - "127.0.0.1:5432:5432"
         environment:
@@ -150,8 +183,8 @@ services:
             - "127.0.0.1:1337:1337"
         environment:
             - NEO4J_AUTH=homestead:secret
-        volumes_from:
-            - volumes_data
+        volumes:
+            - neo4j:/var/lib/neo4j/data
 
 ### MongoDB Container #######################################
 
@@ -159,25 +192,26 @@ services:
         build: ./mongo
         ports:
             - "127.0.0.1:27017:27017"
-        volumes_from:
-            - volumes_data
+        volumes:
+            - mongo:/data/db
 
 ### Redis Container #########################################
 
     redis:
         build: ./redis
-        volumes_from:
-            - volumes_data
+        volumes:
+            - redis:/data
         ports:
             - "127.0.0.1:6379:6379"
 
-### Aerospike c Container #########################################
+### Aerospike c Container ###################################
 
     aerospike:
         build: ./aerospike
         volumes_from:
             - workspace
-            - volumes_data
+        volumes:
+            - aerospike:/opt/aerospike/data
         ports:
             - "127.0.0.1:3000:3000"
             - "127.0.0.1:3001:3001"
@@ -189,8 +223,8 @@ services:
 
     memcached:
         build: ./memcached
-        volumes_from:
-            - volumes_data
+        volumes:
+            - memcached:/var/lib/memcached
         ports:
             - "127.0.0.1:11211:11211"
         links:
@@ -206,7 +240,7 @@ services:
         links:
             - php-fpm
 
-### RabbitMQ Container ####################################
+### RabbitMQ Container ######################################
 
     rabbitmq:
         build: ./rabbitmq
@@ -235,11 +269,12 @@ services:
     caddy:
         build: ./caddy
         volumes_from:
-            - volumes_source
-            - volumes_data
+            - applications
+        volumes:
+            - caddy:/root/.caddy
         ports:
-            - "127.0.0.1:80:80"
-            - "127.0.0.1:443:443"
+            - "80:80"
+            - "443:443"
             - "127.0.0.1:2015:2015"
         volumes:
             - ./caddy/Caddyfile:/etc/Caddyfile
@@ -247,7 +282,7 @@ services:
         links:
             - php-fpm
 
-### phpMyAdmin Container ##################################
+### phpMyAdmin Container ####################################
 
     phpmyadmin:
         build: ./phpmyadmin
@@ -256,8 +291,6 @@ services:
             MYSQL_USER: homestead
             MYSQL_PASSWORD: secret
             MYSQL_ROOT_PASSWORD: root
-        volumes_from:
-            - volumes_data
         ports:
             - "127.0.0.1:8080:80"
         links:
@@ -266,7 +299,7 @@ services:
             # for mariadb container
             # - "mariadb:db"
 
-### pgAdmin Container ##################################
+### pgAdmin Container #######################################
 
     pgadmin:
         build: ./pgadmin
@@ -275,43 +308,45 @@ services:
         links:
             - postgres
 
-### ElasticSearch Container ##################################
+### ElasticSearch Container #################################
 
     elasticsearch:
         build: ./elasticsearch
-        volumes_from:
-            - volumes_data
+        volumes:
+            - elasticsearch-data:/usr/share/elasticsearch/data
+            - elasticsearch-pkugins:/usr/share/elasticsearch/data
         ports:
-            - "127.0.0.1:9200:9200"
-            - "127.0.0.1:9300:9300"
+            - "127.0.0.1:9201:9200"
+       #     - "127.0.0.1:9300:9300"
         links:
             - php-fpm
 
-### Laravel Application Code Container ######################
+### Volumes Setup ###########################################
 
-    volumes_source:
-        image: tianon/true
-        volumes:
-            - ../laravel:/var/www/laravel
-            # Demonstration of how to mount multiple sites
-            # - ../../site_a/:/var/www/site_a
-            # - ../../site_b/:/var/www/site_b
-
-### Databases Data Container ################################
-
-    volumes_data:
-        image: tianon/true
-        volumes:
-            - ./data/mysql:/var/lib/mysql
-            - ./data/postgres:/var/lib/postgresql/data
-            - ./data/memcached:/var/lib/memcached
-            - ./data/redis:/data
-            - ./data/neo4j:/var/lib/neo4j/data
-            - ./data/mongo:/data/db
-            - ./data/aerospike:/opt/aerospike/data
-            - ./data/sessions:/sessions
-            - ./data/caddy:/root/.caddy
-            - ./data/elasticsearch/data:/usr/share/elasticsearch/data
-            - ./data/elasticsearch/pkugins:/usr/share/elasticsearch/pkugins
-
-### Add more Containers below ###############################
+volumes:
+    mysql:
+        driver: "local"
+    postgres:
+        driver: "local"
+    memcached:
+        driver: "local"
+    redis:
+        driver: "local"
+    neo4j:
+        driver: "local"
+    mariadb:
+        driver: "local"
+    mongo:
+        driver: "local"
+    phpmyadmin:
+        driver: "local"
+    aerospike:
+        driver: "local"
+    caddy:
+        driver: "local"
+    elasticsearch-data:
+        driver: "local"
+    elasticsearch-pkugins:
+        driver: "local"
+    sessions:    ## nothing is connected to this (- ./data/sessions:/sessions)
+        driver: "local"

@@ -1,0 +1,1 @@
+workspace nginx php-fpm elasticsearch postgres redis beanstalkd

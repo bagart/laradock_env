@@ -23,7 +23,8 @@ xdebug_start ()
     if [[ $1 != "" ]]; then
         $WINPTY docker exec --user=laradock -it $PHP_WORKSPACE_CONTAINER bash -c "echo export PHP_IDE_CONFIG=\\\"serverName=$1\\\" >> ~/.bash_aliases"
     fi
-    $WINPTY docker exec --user=laradock -it $PHP_WORKSPACE_CONTAINER bash -c 'php -v; echo PHP_IDE_CONFIG: $PHP_IDE_CONFIG;'
+    $WINPTY docker exec --user=laradock -it $PHP_WORKSPACE_CONTAINER bash -c 'php -v'
+    #; echo PHP_IDE_CONFIG: "$PHP_IDE_CONFIG";
 }
 
 xdebug_stop ()
@@ -32,8 +33,6 @@ xdebug_stop ()
     $WINPTY docker exec -it $PHP_WORKSPACE_CONTAINER bash -c "sed -i 's/^zend_extension=/;zend_extension=/g' /etc/php/7.0/cli/conf.d/20-xdebug.ini"
     $WINPTY docker exec --user=laradock -it $PHP_WORKSPACE_CONTAINER bash -c 'cat ~/.bash_aliases | grep -v "^export PHP_IDE_CONFIG=" > ~/.bash_aliases'
     $WINPTY docker exec --user=laradock -it $PHP_WORKSPACE_CONTAINER bash -c 'php -v'
-
-
 }
 
 case $1 in
