@@ -2,15 +2,20 @@
 this project is wrapper for https://github.com/LaraDock/laradock
 
 #Install
+
 copy to parrent path of your projects
+
 edit [cmd/service.lst](cmd/service.lst) edit list of docker images for run
+
 default: workspace nginx php-fpm elasticsearch postgres redis beanstalkd
+
 full list in docker-compose.yml
 
 edit [_env/default/laradock/prepare.sh](_env/default/laradock/prepare.sh) for all change of default config
 
 
 edit [_env/{dev,test,prod}/docker-compose.yml](_env/dev/docker-compose.yml) configure docker-compose
+
 you can add any other files/path of your project like .env(for dev server)
 
 run [cmd/install.sh {env}](cmd/install.sh) 
