@@ -35,3 +35,10 @@ echo xdebug.var_display_max_data = 1024 >> php-fpm/xdebug.ini
 
 #make fault-tolerance
 #sed -i -e 's/^\s*CMD \[\"\/usr\/bin\/beanstalkd.*/CMD \["\/usr\/bin\/beanstalkd", "-b", "\/var\/lib\/beanstalkd"\]\n/' beanstalkd/Dockerfile
+
+
+
+#hotfix https://github.com/laradock/laradock/pull/557
+sed -i 's/\r//' /home/laradock/aliases.sh
+sed -i 's/^#! \/bin\/sh/#! \/bin\/bash/' /home/laradock/aliases.sh
+
