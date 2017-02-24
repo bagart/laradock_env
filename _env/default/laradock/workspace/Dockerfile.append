@@ -20,5 +20,5 @@ RUN /usr/bin/supervisorctl start laravel-worker:*
 #;fi
 
 #https://github.com/laradock/laradock/pull/557
-#RUN sed -i 's/\r//' /home/laradock/aliases.sh
-#RUN sed -i 's/^#! \/bin\/sh/#! \/bin\/bash/' /home/laradock/aliases.sh
+RUN sed -i 's/\r//' /home/laradock/aliases.sh
+RUN sed -i 's/^#! \/bin\/sh/#! \/bin\/bash/' /home/laradock/aliases.sh
