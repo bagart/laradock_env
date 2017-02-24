@@ -12,9 +12,13 @@ RUN /usr/sbin/update-rc.d supervisor defaults 91
 #CMD ["/usr/bin/supervisord"]
 RUN /usr/bin/supervisorctl start laravel-worker:*
 
-ARG INSTALL_GRUNT=false
-ENV INSTALL_GRUNT ${INSTALL_GRUNT}
 
-RUN if [ ${INSTALL_GRUNT} = true && ${INSTALL_NODE} = true ]; then \
-    npm install -g grunt\
-;fi
+#ARG INSTALL_GRUNT=false
+#ENV INSTALL_GRUNT ${INSTALL_GRUNT}
+#RUN if [ ${INSTALL_GRUNT} = true && ${INSTALL_NODE} = true ]; then \
+#    npm install -g grunt\
+#;fi
+
+#https://github.com/laradock/laradock/pull/557
+#RUN sed -i 's/\r//' /home/laradock/aliases.sh
+#RUN sed -i 's/^#! \/bin\/sh/#! \/bin\/bash/' /home/laradock/aliases.sh

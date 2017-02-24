@@ -17,33 +17,39 @@ services:
             context: ./workspace
             args:
                 - INSTALL_XDEBUG=false
+                - INSTALL_SOAP=false
                 - INSTALL_MONGO=false
                 - INSTALL_NODE=false
-                - INSTALL_GRUNT=false
+                #- INSTALL_GRUNT=false
                 - INSTALL_YARN=false
                 - INSTALL_DRUSH=false
                 - INSTALL_AEROSPIKE_EXTENSION=false
-                - COMPOSER_GLOBAL_INSTALL=false
+                - INSTALL_V8JS_EXTENSION=false
+                - COMPOSER_GLOBAL_INSTALL=true
                 - INSTALL_WORKSPACE_SSH=false
+                - INSTALL_LARAVEL_ENVOY=false
+                - INSTALL_DEPLOYER=false
+                - INSTALL_LINUXBREW=false
                 - PUID=1000
                 - PGID=1000
                 - NODE_VERSION=stable
+                - YARN_VERSION=latest
                 - TZ=Europe/Moscow
         volumes_from:
             - applications
         extra_hosts:
             # IMPORTANT: Replace with your Docker Host IP (will be appended to /etc/hosts)
             - "dockerhost:10.0.75.1"
-        #ports:
-        #   - "127.0.0.1:2222:22"
-
+        ports:
+           - "127.0.0.1:2222:22"
         tty: true
         expose:
             - "9000"
             - "9200"
         environment:
             # IMPORTANT: Set the Remote Interpreter entry matching name to `laravel`
-            - PHP_IDE_CONFIG = serverName=laravel
+            # php -r 'var_export($_SERVER);' | grep -P 'IDE|XDEBUG'
+            - PHP_IDE_CONFIG=serverName=laravel
 
 ### PHP-FPM Container #######################################
 
@@ -52,10 +58,14 @@ services:
             context: ./php-fpm
             args:
                 - INSTALL_XDEBUG=false
+                - INSTALL_SOAP=false
                 - INSTALL_MONGO=false
                 - INSTALL_ZIP_ARCHIVE=false
+                - INSTALL_BCMATH=false
+                - INSTALL_PHPREDIS=false
                 - INSTALL_MEMCACHED=false
                 - INSTALL_OPCACHE=false
+                - INSTALL_EXIF=false
                 - INSTALL_AEROSPIKE_EXTENSION=false
                 - CODEIGNITER=false
             dockerfile: Dockerfile-70
@@ -71,7 +81,7 @@ services:
             - "dockerhost:10.0.75.1"
         environment:
             # IMPORTANT: Set the Remote Interpreter entry matching name to `laravel`
-            - PHP_IDE_CONFIG = serverName=laravel
+            - PHP_IDE_CONFIG=serverName=laravel
 
 ### Nginx Server Container ##################################
 
@@ -139,7 +149,7 @@ services:
     mariadb:
         build: ./mariadb
         volumes:
-            - mysql:/var/lib/mysql
+            - mariadb:/var/lib/mysql
         ports:
             - "127.0.0.1:3306:3306"
         environment:
@@ -194,6 +204,15 @@ services:
             - "127.0.0.1:27017:27017"
         volumes:
             - mongo:/data/db
+
+### RethinkDB Container #######################################
+
+    rethinkdb:
+        build: ./rethinkdb
+        ports:
+            - "8090:8080"
+        volumes:
+            - rethinkdb:/data/rethinkdb_data
 
 ### Redis Container #########################################
 
@@ -268,17 +287,16 @@ services:
 
     caddy:
         build: ./caddy
-        volumes_from:
-            - applications
-        volumes:
-            - caddy:/root/.caddy
         ports:
             - "80:80"
             - "443:443"
             - "127.0.0.1:2015:2015"
+        volumes_from:
+            - applications
         volumes:
             - ./caddy/Caddyfile:/etc/Caddyfile
             - ./logs/caddy:/var/log/caddy
+            - caddy:/root/.caddy
         links:
             - php-fpm
 
@@ -314,12 +332,19 @@ services:
         build: ./elasticsearch
         volumes:
             - elasticsearch-data:/usr/share/elasticsearch/data
-            - elasticsearch-pkugins:/usr/share/elasticsearch/data
+            - elasticsearch-plugins:/usr/share/elasticsearch/data
         ports:
             - "127.0.0.1:9200:9200"
             - "127.0.0.1:9300:9300"
         links:
             - php-fpm
+
+### Selenium Container #########################################
+
+    selenium:
+        build: ./selenium
+        ports:
+            - "4444:4444"
 
 ### Volumes Setup ###########################################
 
@@ -338,6 +363,8 @@ volumes:
         driver: "local"
     mongo:
         driver: "local"
+    rethinkdb:
+        driver: "local"
     phpmyadmin:
         driver: "local"
     aerospike:
@@ -346,7 +373,7 @@ volumes:
         driver: "local"
     elasticsearch-data:
         driver: "local"
-    elasticsearch-pkugins:
+    elasticsearch-plugins:
         driver: "local"
     sessions:    ## nothing is connected to this (- ./data/sessions:/sessions)
         driver: "local"
