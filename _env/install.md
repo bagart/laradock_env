@@ -11,7 +11,7 @@
         service docker start
         exit
 
-- [install docker-compose](#https://docs.docker.com/compose/install/)
+- [install docker-compose](https://docs.docker.com/compose/install/)
 - install env
 
         sudo apt install git
