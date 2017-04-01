@@ -16,6 +16,6 @@
 
         sudo apt install git
 
-    optional: laravel on localhost
+    optional: php on localhost
 
         sudo apt install composer php5.6 php-mbstring php-curl php-xml php-xdebug
