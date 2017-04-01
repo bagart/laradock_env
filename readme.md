@@ -29,7 +29,7 @@ you can change it with add to current user(~/.bash_aliases) or run in console:
 export LaraDock_ENV=test
 ```
 #Use
-
+all command must run in project root
 [cmd/up.sh](cmd/up.sh) - run laradock containers with docker-list (in file) and connect to workspace
 
 [cmd/stop.sh](cmd/stop.sh) - stop all laradock container
