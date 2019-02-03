@@ -38,6 +38,8 @@ Laradock ENV is a wrapper with command tools for build AND management of [Larado
 `.laradock/uninstall.sh` - Laradock uninstall with container purge
 
 # Structure
+Important: You can change "Laradock ENV" path with `.env` config
+
     .
     ├── laravel                # Project name, your project root
     │   ├── .git                    # Your git
