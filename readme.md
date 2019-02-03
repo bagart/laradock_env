@@ -1,52 +1,121 @@
-# Simple LaraDock tools and dev environments
-this project is wrapper for https://github.com/LaraDock/laradock
+# Laradock ENV 2.0
+Laradock ENV is a wrapper with command tools for build AND management of [Laradock](https://github.com/laradock/laradock) 
 
-#Install
+## Use example
 
-copy to parrent path of your projects
+`./up.sh` 
+- Regular laradock start
+- Install if needed
+- Start [http://localhost](http://localhost)
+- Connect to workspace
 
-edit [cmd/service.lst](cmd/service.lst) edit list of docker images for run
+`./stop.sh` - Stop Laradock
 
-default: workspace nginx php-fpm elasticsearch postgres redis beanstalkd
+`./restart.sh` - Restart Laradock
 
-full list in docker-compose.yml
+`./ps.sh` - List of Laradock containers
 
-edit [_env/default/laradock/prepare.sh](_env/default/laradock/prepare.sh) for all change of default config
+`./logs.sh` - Logs of Laradock containers
 
+`./install.sh`
+- Install/Upgrade/Rebuild Laradock
+- Configure Laradock with developer env (include xdebug) for current project
+- Start Laradock
+- Build backend with php composer and artisan DB (migration and seed)
 
-edit [_env/{dev,test,prod}/docker-compose.yml](_env/dev/docker-compose.yml) configure docker-compose
+`./conn.sh $service` - Connect to Laradock service terminal by name
+`./conn.sh workspace` - Connect to workspace terminal with laradock user
+`./conn.sh workspace root` - Connect to workspace terminal with root user
 
-you can add any other files/path of your project like .env(for dev server)
+`./conn/*.sh` - Templates with terminal for Laradock containers
+`./conn/workspace.sh` - connect to workspace terminal with laradock user
 
-run [cmd/install.sh {env}](cmd/install.sh) 
-- 1st run: install
-- 2nd run: reinstall (full rebuild) with clear db, if image is changed
+`./app/*.sh` - Laradock command for application
+`./app/install-composer.sh` - Build PHP App
+`./app/purge-postgres.sh` - Purge Postgres DB
+`./app/purge-beanstalkd.sh` - Purge BeanstalkD with consistent storage
 
-{env}: dev (is default), test, prod
+`.laradock/uninstall.sh` - Laradock uninstall with container purge
 
-you can change it with add to current user(~/.bash_aliases) or run in console:
+# Structure
+    .
+    ├── laravel                # Project name, your project root
+    │   ├── .git                    # Your git
+    │   ├── cmd                     # Console utils
+    │   │   ├── app*                 # Your app commands
+    │   │   ├── dev*                 # Your developer commands
+    │   │   ├── cloud*               # Your cloud env commands like (We use Kubernates)
+    -------------------------------------------------------------------------------------
+    │   │   └── laradock            # Laradock_env root (THIS PROJECT)
+    │   │       ├── .env*               # install with: cp .env_example .env
+    │   │       ├── .env.example
+    │   │       ├── .git                # Laeadock_env git  
+    │   │       ├── .laradock           # Laradock_env internal utils
+    │   │       │   ├── customize.sh        # Example with customize laradock. Not used in this package
+    │   │       │   ├── env.sh              # Prepare env
+    │   │       │   ├── rebuild.sh          # Rebuild all containers and prepare DB migration with seed
+    │   │       │   ├── uninstall.sh        # Uninstall Laradock and remove containers and DB state
+    │   │       │   └── upgrade.sh          # Upgrade Laradock or load actual version 
+    │   │       ├── app                 # Laradock command for application
+    │   │       │   ├── install-*.sh        # Prepare App things
+    │   │       │   ├── install-composer.sh # composer install
+    │   │       │   └── purge-*.sh          # Purge DB state
+    │   │       ├── conn                # Connect to containera
+    │   │       │   └── *.sh                # Connection with different containers terminal
+    │   │       │   └── workspace.sh        # Application workspace bash
+    │   │       ├── install.sh          # Prepare last laradock version
+    │   │       ├── LICENSE             # MIT LICENSE
+    │   │       ├── logs.sh             # Laradock Logs
+    │   │       ├── ps.sh               # Laradock container list
+    │   │       ├── README.md           # This document
+    │   │       ├── restart.sh          # Laradock restart
+    │   │       ├── stop.sh             # Laradock stop 
+    │   │       └── up.sh               # Laradock run
+    -------------------------------------------------------------------------------------
+    │   └── public              # Public HTTP root path
+    │       └── index.php           # default http script
+    └── laradock_laravel*       # Autocreated Laradock root
+
+# INSTALL
+
+Run in root of your project
+
+```bash
+git submodule add git://github.com/bagart/laradock_env.git cmd/laradock
+cmd/laradock/up.sh
+cp cmd/laradock/.env.exaple cmd/laradock/.env
 ```
-export LaraDock_ENV=test
+
+### Alternative
+```bash
+git clone git://github.com/bagart/laradock_env.git cmd/laradock
+cmd/laradock/up.sh
+cp cmd/laradock/.env.exaple cmd/laradock/.env
 ```
-#Use
-all command must run in project root
-[cmd/up.sh](cmd/up.sh) - run laradock containers with docker-list (in file) and connect to workspace
 
-[cmd/stop.sh](cmd/stop.sh) - stop all laradock container
-  
-[cmd/conn-cmd/conn-workspace.sh](cmd/conn-workspace.sh) - connect to cli workspace with work user
+### Optional
+```bash
+rm -rf cmd/laradock/.git
+git add cmd/laradock/*
+```
 
-[cmd/conn-cmd/conn-root-workspace.sh](cmd/conn-root-workspace.sh) - connect to cli workspace with root user
+# Prepare Laravel for Laradock
+laravel/.env
+```env
+DB_CONNECTION=pgsql
+DB_HOST=postgres
+DB_DATABASE=default
+DB_USERNAME=default
+DB_PASSWORD=secret
 
-[cmd/conn-*.sh](cmd/) - connect to other container
+BROADCAST_DRIVER=redis
+CACHE_DRIVER=redis
+SESSION_DRIVER=redis
 
+REDIS_HOST=redis
+REDIS_PASSWORD=null
+REDIS_PORT=6379 
 
-[cmd/purge-beanstalkd.sh](cmd/purge-beanstalkd.sh) - clear beanstalkd queue
-
-[cmd/rebuild.sh](cmd/rebuild.sh) - rebuild new docker images(without copy _env), run xdebug mode(dev-env)
-[cmd/ps.sh](cmd/ps.sh) - information about containers ( docker-compose ps )
-
-#What news
-
-add env
-add new cmd
+#for use workers: redis
+QUEUE_CONNECTION=sync
+```
