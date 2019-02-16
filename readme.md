@@ -23,6 +23,15 @@ Laradock ENV is a wrapper with command tools for build AND management of [Larado
 - Start Laradock
 - Build backend with php composer and artisan DB (migration and seed)
 
+`./fix.sh` - Fix most of problems with any containers
+- stop, rm, pull, rebuild without cache 
+- very slow
+  Benchmark: .laradock/rebuild_containers.sh, run two times 
+  * windows: 
+    - `time laradock/.laradock/rebuild_containers.sh`: 28 -> 15 sec
+    - `time laradock/.laradock/rebuild_containers.sh`: 9m 2sec
+  * windows --fix: 28sec
+
 `./conn.sh $service` - Connect to Laradock service terminal by name
 `./conn.sh workspace` - Connect to workspace terminal with laradock user
 `./conn.sh workspace root` - Connect to workspace terminal with root user
@@ -35,6 +44,7 @@ Laradock ENV is a wrapper with command tools for build AND management of [Larado
 `./app/purge-postgres.sh` - Purge Postgres DB
 `./app/purge-beanstalkd.sh` - Purge BeanstalkD with consistent storage
 
+`.laradock/*.sh` - Laradock Env internal utils
 `.laradock/uninstall.sh` - Laradock uninstall with container purge
 
 # Structure
@@ -55,7 +65,8 @@ Important: You can change "Laradock ENV" path with `.env` config
     │   │       ├── .laradock           # Laradock_env internal utils
     │   │       │   ├── customize.sh        # Example with customize laradock. Not used in this package
     │   │       │   ├── env.sh              # Prepare env
-    │   │       │   ├── rebuild.sh          # Rebuild all containers and prepare DB migration with seed
+    │   │       │   ├── rebuild.sh          # Renew all containers and prepare APP (migration, seeds)
+    │   │       │   ├── rebuild_containers.sh # Renew all containers
     │   │       │   ├── uninstall.sh        # Uninstall Laradock and remove containers and DB state
     │   │       │   └── upgrade.sh          # Upgrade Laradock or load actual version 
     │   │       ├── app                 # Laradock command for application
@@ -65,6 +76,7 @@ Important: You can change "Laradock ENV" path with `.env` config
     │   │       ├── conn                # Connect to containera
     │   │       │   └── *.sh                # Connection with different containers terminal
     │   │       │   └── workspace.sh        # Application workspace bash
+    │   │       ├── fix.sh              # Fix most of problems with any containers
     │   │       ├── install.sh          # Prepare last laradock version
     │   │       ├── LICENSE             # MIT LICENSE
     │   │       ├── logs.sh             # Laradock Logs
