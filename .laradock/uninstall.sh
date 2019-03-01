@@ -6,7 +6,7 @@ if [ -d $LARADOCK_PATH ]; then
     cd $LARADOCK_PATH
         docker-compose stop
         docker-compose rm -f
-    cd $PROJECT_PATH
+    cd $LARADOCK_CURRENT_PATH
     rm -rf $LARADOCK_PATH
 else
     echo "---------- Laradock uninstall is not needed ----------"

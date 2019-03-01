@@ -27,10 +27,9 @@ Laradock ENV is a wrapper with command tools for build AND management of [Larado
 - stop, rm, pull, rebuild without cache 
 - very slow
   Benchmark: .laradock/rebuild_containers.sh, run two times 
-  * windows: 
-    - `time laradock/.laradock/rebuild_containers.sh`: 28 -> 15 sec
-    - `time laradock/.laradock/rebuild_containers.sh`: 9m 2sec
-  * windows --fix: 28sec
+  * windows+ssd:
+    - `time laradock/.laradock/rebuild_containers.sh`: 28 sec (second: 15 sec)
+    - `time laradock/.laradock/rebuild_containers.sh --fix`: 9m 2sec
 
 `./conn.sh $service` - Connect to Laradock service terminal by name
 `./conn.sh workspace` - Connect to workspace terminal with laradock user
@@ -97,14 +96,14 @@ Run in root of your project
 ```bash
 git submodule add git://github.com/bagart/laradock_env.git cmd/laradock
 cmd/laradock/up.sh
-cp cmd/laradock/.env.exaple cmd/laradock/.env
+cp cmd/laradock/.env.example cmd/laradock/.env
 ```
 
 ### Alternative
 ```bash
 git clone git://github.com/bagart/laradock_env.git cmd/laradock
 cmd/laradock/up.sh
-cp cmd/laradock/.env.exaple cmd/laradock/.env
+cp cmd/laradock/.env.example cmd/laradock/.env
 ```
 
 ### Optional
@@ -130,6 +129,6 @@ REDIS_HOST=redis
 REDIS_PASSWORD=null
 REDIS_PORT=6379 
 
-#for use workers: redis
+#for use with workers: redis|beanstalkd|etc
 QUEUE_CONNECTION=sync
 ```

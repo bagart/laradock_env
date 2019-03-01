@@ -6,7 +6,7 @@ echo "---------- Laradock UP: $LARADOCKENV_PROJECT_NAME ($LARADOCK_PROJECT_SERVI
 if [ -f $LARADOCK_PATH/docker-compose.yml ]; then
     cd $LARADOCK_PATH
         docker-compose up -d $LARADOCK_PROJECT_SERVICES
-    cd $PROJECT_PATH
+    cd $LARADOCK_CURRENT_PATH
 else
     $LARADOCKENV_PATH/install.sh
 fi

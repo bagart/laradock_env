@@ -27,6 +27,6 @@ if [ -d "_env" ]; then
         echo "---------- prepare LARADOCK -----------"
         cd $LARADOCK_PATH
             ./prepare.sh
-        cd $PROJECT_PATH
+        cd $LARADOCK_CURRENT_PATH
     fi
 fi

@@ -3,4 +3,4 @@
 
 cd $LARADOCK_PATH
     docker-compose ps
-cd $PROJECT_PATH
+cd $LARADOCK_CURRENT_PATH

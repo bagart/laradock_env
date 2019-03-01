@@ -9,7 +9,7 @@ if [[ "$1" != "" ]]; then
             docker-compose rm -f $1
             rm -rf .data/$1
             docker-compose up -d $1
-        cd $PROJECT_PATH
+        cd $LARADOCK_CURRENT_PATH
     else
         echo Laradock service $1 is not exist
     fi

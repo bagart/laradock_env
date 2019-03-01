@@ -37,4 +37,4 @@ cd $LARADOCK_PATH
 
     echo ---------- rebuild$LaraDockEnv_BUILD_PARAM: $LARADOCK_PROJECT_SERVICES ----------
     docker-compose build $LaraDockEnv_BUILD_PARAM --pull $LARADOCK_PROJECT_SERVICES | $LaraDock_PARAM
-cd $PROJECT_PATH
+cd $LARADOCK_CURRENT_PATH

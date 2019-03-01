@@ -3,4 +3,4 @@
 
 cd $LARADOCK_PATH
     docker-compose logs -f $1 | grep -v " schedule:run >> /dev/null 2>&1"
-cd $PROJECT_PATH
+cd $LARADOCK_CURRENT_PATH
