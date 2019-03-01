@@ -51,11 +51,11 @@ Important: You can change "Laradock ENV" path with `.env` config
 
     .
     ├── laravel                # Project name, your project root
-    │   ├── .git                    # Your git
+    │   ├── .git                    # Your project .git
     │   ├── cmd                     # Console utils
     │   │   ├── app*                 # Your app commands
     │   │   ├── dev*                 # Your developer commands
-    │   │   ├── cloud*               # Your cloud env commands like (We use Kubernates)
+    │   │   ├── cloud*               # Your cloud env commands (We use Kubernates)
     -------------------------------------------------------------------------------------
     │   │   └── laradock            # Laradock_env root (THIS PROJECT)
     │   │       ├── .env*               # install with: cp .env_example .env
@@ -87,7 +87,8 @@ Important: You can change "Laradock ENV" path with `.env` config
     -------------------------------------------------------------------------------------
     │   └── public              # Public HTTP root path
     │       └── index.php           # default http script
-    └── laradock_laravel*       # Autocreated Laradock root
+    ├── laradock_laravel*       # Autocreated Laradock root
+    └── .gitignore              # Add `laradock_laravel*` +/- `cmd/laradock` to gitignore
 
 # INSTALL
 
