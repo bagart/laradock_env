@@ -91,30 +91,36 @@ Important: You can change "Laradock ENV" path with `.env` config
     └── .gitignore              # Add `laradock_laravel*` +/- `cmd/laradock` to gitignore
 
 # INSTALL
-
 Run in root of your project
 
 ```bash
 git submodule add git://github.com/bagart/laradock_env.git cmd/laradock
 cmd/laradock/up.sh
-cp cmd/laradock/.env.example cmd/laradock/.env
 ```
 
 ### Alternative
 ```bash
 git clone git://github.com/bagart/laradock_env.git cmd/laradock
 cmd/laradock/up.sh
-cp cmd/laradock/.env.example cmd/laradock/.env
 ```
 
-### Optional
+##### Optional
+sync with project
 ```bash
 rm -rf cmd/laradock/.git
 git add cmd/laradock/*
 ```
 
-# Prepare Laravel for Laradock
-laravel/.env
+# Configuration
+
+### Configure Laradock ENV
+Customize Laradock PATH
+```bash
+cp cmd/laradock/.env.example cmd/laradock/.env
+```
+### Configure Laradock
+
+file: laravel/.env
 ```env
 DB_CONNECTION=pgsql
 DB_HOST=postgres
