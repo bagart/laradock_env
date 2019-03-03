@@ -2,15 +2,15 @@
 . "`dirname $0`/init.sh"
 echo "---------- Laradock rebuild $1 $2 $3: $LARADOCKENV_PROJECT_NAME  ----------"
 
-LaraDock_DBG=1;
+LARADOCK_DBG=1;
 if [[ "$1" == "--silence" || "$2" == "--silence" || "$3" == "--silence" ]]; then
-    LaraDock_DBG=0;
+    LARADOCK_DBG=0;
 fi
 
 $LARADOCKENV_PATH/.laradock/rebuild_containers.sh $1 $2 $3
 
 $LARADOCKENV_PATH/up.sh -
 $LARADOCKENV_PATH/app/install-db-seed.sh
-if [[ "$LaraDock_DBG" != "0" ]]; then
+if [[ "$LARADOCK_DBG" != "0" ]]; then
     $LARADOCKENV_PATH/ps.sh
 fi
