@@ -94,7 +94,7 @@ Important: You can change "Laradock ENV" path with `.env` config
     └── .gitignore              # Add `laradock_laravel*` +/- `cmd/laradock` to gitignore
 
 # INSTALL
-Run in root of your project
+Run in your project path
 
 ```bash
 git submodule add git://github.com/bagart/laradock_env.git cmd/laradock
