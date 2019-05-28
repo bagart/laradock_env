@@ -3,7 +3,10 @@ Laradock ENV is a wrapper with command tools for build AND management of [Larado
 
 ## Use example
 
-`./up.sh` 
+`./up.sh` - Run Laradock
+
+**ALIAS**: `cmd/up.sh` - from project path for each command
+
 - Regular laradock start
 - Install if needed
 - Start [http://localhost](http://localhost)
