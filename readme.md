@@ -1,5 +1,9 @@
+# Updates 2020: [Laradock Multi](https://github.com/bagart/laradock-multi)
+is a more powerful wrapper which contains the functionality of Laradock ENV
+
 # Laradock ENV 2.0
 Laradock ENV is a wrapper with command tools for build AND management of [Laradock](https://github.com/laradock/laradock) 
+
 
 ## Use example
 
